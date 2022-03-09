@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Recipe from './Recipe'
+import Navbar from './Navbar'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+  getRecipes() {
+    fetch('http://localhost:8080/recipes')
+        .then(response => response.json())
+        .then(data => this.setState({recipes : data}))
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      recipes : []
+    }
+
+    this.getRecipes();
+  }
+
+  render() {
+    return (<div>
+      <Navbar/>
+      {this.state.recipes.map((recipe, index) => (
+          <Recipe recipe={recipe} />
+      ))}
+    </div>)
+  }
 }
 
 export default App;
